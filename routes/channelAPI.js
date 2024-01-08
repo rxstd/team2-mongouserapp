@@ -23,8 +23,10 @@ router.get("/all", userMiddleware, async function (req, res, next) {
     for (let i = 0; i < channelList.length; i++) {
       console.log(channelList[i]);
       const channel_id = channelList[i].channel_id;
+
+      // msg_date를 기준으로 최근 메시지를 가져온다.
       const latest_chat_data = await ChannelMsg.findOne({ channel_id }).sort({
-        reg_date: -1,
+        msg_date: -1,
       });
 
       let latest_chat = "최근 메시지가 없습니다.";
@@ -40,11 +42,6 @@ router.get("/all", userMiddleware, async function (req, res, next) {
       }
 
       //latest_chat_date를 *일 *시간 *분 *초 전으로 바꿔주기
-      // 몇초밖에안됐으면 *초 전
-      // 몇분밖에안됐으면 *분 전
-      // 몇시간밖에안됐으면 *시간 전
-      // 몇일밖에안됐으면 *일 전
-
       const now = new Date();
       const diff = now - latest_chat_date;
 
@@ -52,6 +49,9 @@ router.get("/all", userMiddleware, async function (req, res, next) {
       const diff_minute = Math.floor(diff_second / 60);
       const diff_hour = Math.floor(diff_minute / 60);
       const diff_day = Math.floor(diff_hour / 24);
+
+      //timestamp로 바꿔주기
+      let latest_chat_timestamp = latest_chat_date.getTime();
 
       if (diff_second < 60) {
         latest_chat_date = `${diff_second}초 전`;
@@ -62,16 +62,6 @@ router.get("/all", userMiddleware, async function (req, res, next) {
       } else {
         latest_chat_date = `${diff_day}일 전`;
       }
-
-      let test_latest_chat_date =
-        diff_second +
-        "초 전" +
-        diff_minute +
-        "분 전" +
-        diff_hour +
-        "시간 전" +
-        diff_day +
-        "일 전";
 
       // _id값을 가지고 iconic_color 만들기 (red,green,blue,yellow 중 하나)
       // _id를 가지고 md5로 변환한다음 regex로 숫자만 추출해서 4로 나눈 나머지를 iconic_color로 사용하기
@@ -86,9 +76,14 @@ router.get("/all", userMiddleware, async function (req, res, next) {
         latest_chat,
         iconic_color,
         latest_chat_date,
-        test_latest_chat_date,
+        latest_chat_timestamp,
       });
     }
+
+    //latest_chat_timestamp를 기준으로 내림차순 정렬
+    newChannelList.sort((a, b) => {
+      return b.latest_chat_timestamp - a.latest_chat_timestamp;
+    });
 
     res.json({
       message: "채널 목록 조회에 성공했습니다.",
@@ -230,15 +225,46 @@ router.post("/:cid/send", userMiddleware, async function (req, res, next) {
   const member_id = req.session.member_id;
   const member_nick = req.session.member_nick;
 
-  const sendChat = chatStore.sendChat(
-    channel_id,
-    member_id,
-    member_nick,
-    message
-  );
+  if (req.session.member_id === undefined) {
+    res.json({
+      message: "로그인이 필요합니다.",
+      data: {},
+    });
+    return;
+  }
+
+  let newChat = {};
+
+  newChat.channel_id = channel_id;
+  newChat.member_id = member_id;
+  newChat.nick_name = member_nick;
+  newChat.msg_type_code = 3;
+  newChat.connection_id = "connection1";
+  newChat.message = message;
+  newChat.ip_address = "1.1.1.1";
+  newChat.top_channel_msg_id = 1;
+  newChat.msg_state_code = 1;
+  newChat.msg_date = new Date();
+  newChat.edit_date = new Date();
+  newChat.del_date = new Date();
+
+  const sendChat = await ChannelMsg.create(newChat);
+
+  const channelInfo = await Channel.findOne({ channel_id });
+  const channelMsgs = await ChannelMsg.find({ channel_id }).sort({
+    reg_date: -1,
+  });
+
+  const retData = {
+    message: "채널 메시지 조회에 성공했습니다.",
+    data: {
+      channel: channelInfo,
+      chats: channelMsgs,
+    },
+  };
 
   if (sendChat) {
-    res.json(sendChat);
+    res.json(retData);
   } else {
     res.json({
       message: "채널 메시지 조회에 실패했습니다.",

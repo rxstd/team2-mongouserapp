@@ -248,8 +248,20 @@
                 }, 300);
               }
 
+              setInterval(() => {
+                getChatLists(false);
+              }, 1000);
+
+              let oldChatDetails = -1;
+
               function updateChatDetails(data) {
                 let res = data.data;
+
+                if (oldChatDetails == res.chats.length) {
+                  return;
+                }
+
+                oldChatDetails = res.chats.length;
 
                 $("#_mc_iconic").html(res.channel.channel_name.substring(0, 2));
                 $("#_mc_title").html(res.channel.channel_name);
@@ -268,7 +280,7 @@
                   let tmp_date = chat.msg_date;
                   let tmp_msg = chat.message;
 
-                  if (chat.msg_type_code == 1) {
+                  if (chat.msg_type_code == 1 || chat.msg_type_code == 0) {
                     chatListHtml = `<li class="divider">${tmp_msg}</li>`;
                   } else if (chat.msg_type_code == 3) {
                     if (chat.member_id == userInfo.member_id) {
@@ -276,24 +288,21 @@
       <div class="chat-text-wrapper">
           <div class="chat-text">
           <p>${tmp_msg}</p>
-          <div class="chat-hour read">${tmp_date} <span>&#10003;</span></div>
+          <div class="chat-hour read">${new Date(
+            tmp_date
+          ).toLocaleString()} <span>&#10003;</span></div>
           </div>
-      </div>
-      <div class="chat-avatar">
-          <img src="/img/user24.png" alt="Quick Chat Admin" />
-          <div class="chat-name">${chat.nick_name}</div>
       </div>
   </li>`;
                     } else {
                       chatListHtml = `<li class="chat-left">
-      <div class="chat-avatar">
-          <img src="/img/user21.png" alt="Quick Chat Admin" />
-          <div class="chat-name">${chat.nick_name}</div>
-      </div>
       <div class="chat-text-wrapper">
+        <div class="chat-name" style="padding: 10px;">${chat.nick_name}</div>
           <div class="chat-text">
           <p>${tmp_msg}</p>
-          <div class="chat-hour read">${tmp_date} <span>&#10003;</span></div>
+          <div class="chat-hour read">${new Date(
+            tmp_date
+          ).toLocaleString()} <span>&#10003;</span></div>
           </div>
       </div>
   </li>`;
@@ -337,7 +346,7 @@
                                 </p>
                               </div>
                               <div class="chat-time">
-                                <span class="time">5 Mins</span>
+                                <span class="time">${chatList[i].latest_chat_date}</span>
                               </div>
                             </div>
                           </a>
@@ -368,8 +377,14 @@
                     message: chatText,
                   },
                   function (data) {
-                    $("#_chatInput").val("");
-                    updateChatDetails(data);
+                    if (data.message == "로그인이 필요합니다.") {
+                      alert(data.message);
+                      location.href = "/login";
+                      return;
+                    } else {
+                      $("#_chatInput").val("");
+                      updateChatDetails(data);
+                    }
                   }
                 );
               }
