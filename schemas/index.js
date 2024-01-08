@@ -7,7 +7,7 @@ const connect = () => {
 
   //몽고DB연결정보를 설정합니다.
   mongoose.connect(
-    "mongodb://welcome1:wjddlsdls110!@localhost:27017/admin",
+    "mongodb://evans:qweqwe123@localhost:27017/admin",
     {
       dbName: "modu_chat",
     },
