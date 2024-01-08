@@ -2,11 +2,12 @@ var express = require("express");
 var router = express.Router();
 var dotenv = require("dotenv");
 
-const db = require("../models/index");
-
 dotenv.config();
 
 const webTitle = process.env.PROJECT_TITLE;
+
+//MongoDB Schema
+const Member = require("../schemas/member");
 
 var userMiddleware = require("../middleware/user.middleware");
 
@@ -38,11 +39,9 @@ router.post("/login", async function (req, res, next) {
       defaultJson.message = "비밀번호가 공란이어서는 안됩니다.";
     }
 
-    const auth = await db.Member.findOne({
-      where: {
-        email: username,
-        member_password: password,
-      },
+    const auth = await Member.findOne({
+      email: username,
+      member_password: password,
     });
 
     if (auth) {

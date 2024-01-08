@@ -6,17 +6,8 @@ var logger = require("morgan");
 
 const layout = require("express-ejs-layouts");
 
-var sequelize = require("./models/index").sequelize;
-
-// DB연결
-sequelize
-  .sync()
-  .then(() => {
-    console.log("DB 연결 성공");
-  })
-  .catch((err) => {
-    console.error(err);
-  });
+const connect = require("./schemas/index");
+connect();
 
 var indexRouter = require("./routes/index");
 var channelRouter = require("./routes/channel");

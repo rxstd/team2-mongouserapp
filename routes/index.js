@@ -2,9 +2,9 @@ var express = require("express");
 var router = express.Router();
 var dotenv = require("dotenv");
 
-var memberStore = require("../store/member.store");
-
 dotenv.config();
+
+const Member = require("../schemas/member");
 
 const webTitle = process.env.PROJECT_TITLE;
 
@@ -20,7 +20,7 @@ router.get("/login", function (req, res, next) {
   res.render("auth/sign-in", { title: webTitle, layout: false });
 });
 
-router.post("/login", function (req, res, next) {
+router.post("/login", async function (req, res, next) {
   let defaultJson = {
     result: true,
     message: "",
@@ -47,7 +47,11 @@ router.post("/login", function (req, res, next) {
     defaultJson.message = "비밀번호가 공란이어서는 안됩니다.";
   }
 
-  const user = memberStore.authUser(username, password);
+  //get count
+  const user = await Member.findOne({
+    email: username,
+    member_password: password,
+  });
 
   console.log(username, password);
 
@@ -59,11 +63,13 @@ router.post("/login", function (req, res, next) {
   } else {
     defaultJson.result = false;
     defaultJson.message =
-      "일치하는 인증 정보가 없습니다.\n이메일 혹은 비밀번호를 확인하십시오.";
+      "일치하는 인증 정보가 없습니다.\\n이메일 혹은 비밀번호를 확인하십시오.";
   }
 
   if (defaultJson.result) {
-    res.send(`<script>alert("${defaultJson.message}");</script>`);
+    res.send(
+      `<script>alert("${defaultJson.message}");location.replace('/chat');</script>`
+    );
   } else {
     res.send(
       `<script>alert("${defaultJson.message}");history.back();</script>`
@@ -75,7 +81,7 @@ router.get("/entry", function (req, res, next) {
   res.render("auth/sign-up", { title: webTitle, layout: false });
 });
 
-router.post("/entry", function (req, res, next) {
+router.post("/entry", async function (req, res, next) {
   const username = req.body.username;
   const password = req.body.password1;
   const passwordConfirm = req.body.password2;
@@ -125,7 +131,9 @@ router.post("/entry", function (req, res, next) {
   }
 
   if (defaultJson.result != false) {
-    const user = memberStore.checkUserAlreadyExists(username);
+    let user = await Member.findOne({
+      email: username,
+    });
 
     const birth = birthDate.split("-").join("").substring(2);
 
