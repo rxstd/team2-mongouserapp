@@ -8,6 +8,7 @@ const Member = require("../schemas/member");
 
 const webTitle = process.env.PROJECT_TITLE;
 
+// 메인페이지
 router.get("/", function (req, res, next) {
   if (req.session.member_id) {
     res.redirect("/chat/");
@@ -16,10 +17,12 @@ router.get("/", function (req, res, next) {
   }
 });
 
+// 로그인 get 방식
 router.get("/login", function (req, res, next) {
   res.render("auth/sign-in", { title: webTitle, layout: false });
 });
 
+// 로그인 post 방식
 router.post("/login", async function (req, res, next) {
   let defaultJson = {
     result: true,
@@ -77,10 +80,12 @@ router.post("/login", async function (req, res, next) {
   }
 });
 
+// 회원가입 get 방식
 router.get("/entry", function (req, res, next) {
   res.render("auth/sign-up", { title: webTitle, layout: false });
 });
 
+// 회원가입 post 방식
 router.post("/entry", async function (req, res, next) {
   const username = req.body.username;
   const password = req.body.password1;
@@ -180,15 +185,18 @@ router.post("/entry", async function (req, res, next) {
   }
 });
 
+// 로그아웃
 router.get("/logout", function (req, res, next) {
   req.session.destroy();
   res.redirect("/login");
 });
 
+// 회원정보찾기 get 방식
 router.get("/find", function (req, res, next) {
   res.render("auth/forgot-pw", { title: webTitle, layout: false });
 });
 
+// 회원정보찾기 post 방식
 router.post("/find", function (req, res, next) {
   const username = req.body.username;
 
