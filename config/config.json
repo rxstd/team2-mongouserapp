@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "modu",
+    "password": "qweqwe@123",
+    "database": "modu_chat",
+    "host": "evans.cvygbdwqpdy4.ap-northeast-2.rds.amazonaws.com",
+    "dialect": "mysql"
+  },
+  "test": {
+    "username": "modu",
+    "password": "qweqwe@123",
+    "database": "modu_chat",
+    "host": "evans.cvygbdwqpdy4.ap-northeast-2.rds.amazonaws.com",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "modu",
+    "password": "qweqwe@123",
+    "database": "modu_chat",
+    "host": "evans.cvygbdwqpdy4.ap-northeast-2.rds.amazonaws.com",
+    "dialect": "mysql"
+  }
+}

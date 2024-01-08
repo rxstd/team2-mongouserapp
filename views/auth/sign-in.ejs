@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <!-- Meta -->
+    <meta name="description" content="Quick Chat App" />
+    <meta name="author" content="ParkerThemes" />
+    <link rel="shortcut icon" href="/img/fav.png" />
+
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.min.js"
+      integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- Title -->
+    <title>ORMCAMP CHAT APP</title>
+
+    <!-- *************
+			************ Common Css Files *************
+		************ -->
+    <!-- Bootstrap css -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+
+    <!-- Main css -->
+    <link rel="stylesheet" href="/css/main.css" />
+
+    <!-- *************
+			************ Vendor Css Files *************
+		************ -->
+  </head>
+  <body class="authentication">
+    <!-- *************
+			************ Login container start *************
+		************* -->
+    <div class="login-container">
+      <!-- Row start -->
+      <div class="row no-gutters h-100">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+          <div class="login-about">
+            <div class="slogan">
+              <span>Ormcamp</span>
+              <span>Chat</span>
+              <span>Application.</span>
+            </div>
+            <div class="about-desc">
+              오름캠프의 채팅 어플리케이션입니다.<br />
+              index, channel, channelAPI, memberAPI 라우터로 구성되어
+              있습니다.<br />
+              강창훈 강사님 잘생겼습니다.
+            </div>
+            <a href="https://lms.aiffel.io/" class="know-more" target="_blank"
+              >AIFFEL LMS <img src="/img/right-arrow.svg"
+            /></a>
+          </div>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+          <div class="login-wrapper">
+            <form action="/api/member/login" method="post" id="loginForm">
+              <div class="login-screen">
+                <div class="login-body">
+                  <a href="/login" class="login-logo">
+                    <img src="/img/logo.svg" alt="Quick Chat" />
+                  </a>
+                  <h6>
+                    돌아오신것을 환영합니다,<br />이용하려면 먼저 로그인
+                    해주세요.<br />아이디 : test1@gmail.com<br />
+                    비밀번호 : 1234
+                  </h6>
+                  <div class="field-wrapper">
+                    <input type="email" autofocus name="username" value="" />
+                    <div class="field-placeholder">이메일 계정</div>
+                  </div>
+                  <div class="field-wrapper mb-3">
+                    <input type="password" name="password" value="" />
+                    <div class="field-placeholder">비밀번호</div>
+                  </div>
+                  <div class="actions">
+                    <a href="/find">로그인에 문제가 있나요?</a>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                  </div>
+                </div>
+                <div class="login-footer">
+                  <span class="additional-link"
+                    >계정이 없으십니까?
+                    <a href="/entry">지금 회원가입 하세요!</a></span
+                  >
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <!-- Row end -->
+    </div>
+    <!-- *************
+			************ Login container end *************
+		************* -->
+    <script>
+      $("#loginForm").submit(function (e) {
+        e.preventDefault();
+        $.ajax({
+          url: "/api/member/login",
+          type: "post",
+          data: $("#loginForm").serialize(),
+          success: function (data) {
+            if (data.result == true) {
+              alert(data.message);
+              console.log(data.data);
+
+              localStorage.setItem("userInfo", JSON.stringify(data.data));
+
+              location.href = "/";
+            } else {
+              alert(data.message);
+            }
+          },
+        });
+      });
+    </script>
+  </body>
+</html>

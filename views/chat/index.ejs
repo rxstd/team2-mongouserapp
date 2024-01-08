@@ -1,0 +1,110 @@
+<!-- Empty chat screen start -->
+<div class="empty-chat-screen">
+  <!-- Option to display logged in user avatar -->
+
+  <img src="/img/user2.png" class="my-avatar" alt="My Avatar" />
+  <h5>Hey, <span>Katherine</span></h5>
+  <h6>Welcome to Quick Chat App</h6>
+  <p>Please select a chat to start messaging.</p>
+  -
+
+  <!-- Display Image -->
+  <img
+    src="/img/empty-chat-display.svg"
+    class="empty-chat-display"
+    alt="My Avatar"
+  />
+  <p>Please select a chat to start messaging.</p>
+
+  <a href="#" class="btn btn-primary lets-chat-mobile-view">Lets Chat</a>
+</div>
+<!-- Empty chat screen end -->
+<!-- Content wrapper start -->
+<div class="chat-content-wrapper d-none">
+  <!-- Active User Chatting Start -->
+  <div class="active-user-chatting">
+    <div class="active-user-info">
+      <div class="toggle-sidebar" id="toggle-sidebar">
+        <span class="toggle-icon"></span>
+      </div>
+      <div class="bg-chat-avatar" id="_mc_iconic"></div>
+      <div class="avatar-info">
+        <h5 id="_mc_title"></h5>
+        <div class="typing" id="_mc_desc"></div>
+      </div>
+    </div>
+    <div class="chat-actions">
+      <a href="#" data-toggle="modal" data-target="#videoCall">
+        <img src="/img/icon-video-call.svg" alt="Video Call" />
+      </a>
+      <a href="#" data-toggle="modal" data-target="#audioCall">
+        <img src="/img/icon-call.svg" alt="Call" />
+      </a>
+    </div>
+  </div>
+  <!-- Active User Chatting End -->
+
+  <!-- Chat Container Start -->
+  <div class="chat-container" id="chatContainer" style="overflow-y: scroll">
+    <div class="chatContainerScroll">
+      <ul class="chat-box" id="chatBox">
+        <li class="chat-left">
+          <div class="chat-avatar">
+            <img src="/img/user21.png" alt="Quick Chat Admin" />
+            <div class="chat-name">Kyle</div>
+          </div>
+          <div class="chat-text-wrapper">
+            <div class="chat-text">
+              <p>Hello, good morning.</p>
+              <div class="chat-hour read">08:55 <span>&#10003;</span></div>
+            </div>
+          </div>
+        </li>
+        <li class="chat-right">
+          <div class="chat-text-wrapper">
+            <div class="chat-text">
+              <p>
+                Hi Kyle<br />
+                Good morning 😃. How are you?
+              </p>
+              <div class="chat-hour read">08:56 <span>&#10003;</span></div>
+            </div>
+          </div>
+          <div class="chat-avatar">
+            <img src="/img/user24.png" alt="Quick Chat Admin" />
+            <div class="chat-name">Amy</div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <!-- Chat Container End -->
+
+  <!-- Chat form start -->
+  <div class="chat-form">
+    <div class="form-group">
+      <textarea
+        id="_chatInput"
+        class="form-control"
+        placeholder="메시지를 입력하세요."
+        onkeypress="if(event.keyCode == 13) { sendChat(); }"
+      ></textarea>
+    </div>
+    <div class="chat-form-actions">
+      <a
+        href="#"
+        class="action-icon"
+        data-toggle="modal"
+        data-target="#attachFile"
+      >
+        <img src="/img/attach.svg" alt="Attachment" />
+        <span class="action-icon-tooltip">Attach</span>
+      </a>
+    </div>
+    <button class="btn btn-primary" onclick="sendChat()">
+      <img src="/img/send1.svg" alt="Send" />
+    </button>
+  </div>
+  <!-- Chat form end -->
+</div>
+<!-- Content wrapper end -->
